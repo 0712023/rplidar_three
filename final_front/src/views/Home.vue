@@ -7,6 +7,7 @@
 <script type="module">
 import * as THREE from "../assets/three.module.js";
 import * as OrbitControls from "../assets/OrbitControls.module.js";
+import { MeshLine, MeshLineMaterial, MeshLineRaycast } from "../assets/three.MeshLine.js"
 import mqtt from '../assets/mqtt.min.js'
 export default {
   data:function(){
@@ -23,15 +24,13 @@ export default {
         topic: 'test',
         qos: 0,
       },
-      client: {
-        connected: false,
-      },
+      client: {connected: false},
       scene:null,
       init_scene:null,
       camera:null,
       renderer:null,
       origin:0,
-      sphere:null
+      sphere:null,
       }
   },
   created: function () {
@@ -63,7 +62,7 @@ export default {
     document.body.removeChild(this.renderer.domElement);
   },
   methods:{
-    createConnection() {
+    createConnection:function() {
       const { host, port, endpoint, ...options } = this.connection;
       const connectUrl = `mqtt://${host}:${port}`;
       try {
@@ -84,23 +83,45 @@ export default {
         this.draw(data);
       })
     },
-    doSubscribe() {
+    doSubscribe:function() {
         const { topic, qos } = this.subscription
         this.client.subscribe(topic, { qos })
+    },
+    add_curve:function(data){
+      let curve_data = [];
+      for(let i = 1; i <= data.length ; i++){
+        if(data[i-1] < 10) continue;
+        curve_data.push(new THREE.Vector2(data[i-1]*Math.cos(i*Math.PI/180)/10, data[i-1]*Math.sin(i*Math.PI/180)/10))
+      }
+      let curve = new THREE.SplineCurve(curve_data);
+      let points = curve.getPoints(curve_data.length);
+      let geometry = new THREE.BufferGeometry().setFromPoints( points );
+		  let material = new THREE.LineBasicMaterial( { color : 0x87ceeb, linewidth : 10 } );
+      let splineObject = new THREE.Line( geometry, material );
+      splineObject.rotation.x = Math.PI/2;
+      this.scene.add(splineObject);
     },
     add_sphere:function(x, y, sphere){
 			sphere.position.set(x, 0, y);
 			this.scene.add( sphere );
 		},
     draw:function(data){
-			for(let i = 1; i <= data.length ; i++){
-				this.add_sphere(data[i-1]*Math.cos(i*Math.PI/180), data[i-1]*Math.sin(i*Math.PI/180), this.sphere.clone());
-			}
+			// for(let i = 1; i <= data.length ; i++){
+			// 	this.add_sphere(data[i-1]*Math.cos(i*Math.PI/180), data[i-1]*Math.sin(i*Math.PI/180), this.sphere.clone());
+			// }
+      // let coor = [];
+      // for(let i = 0; i < data.length ; i++){
+      //   coor.push({'x':data[i]*Math.cos(i*Math.PI/180), 'y':data[i]*Math.sin(i*Math.PI/180)})
+      // }
+      // for(let i = 1; i <= data.length ; i++){
+			// 	if(data[i-1] == 0) continue;
+			// 	// let x = data[i-1]*Math.cos(i*Math.PI/180);
+			// 	// let y = data[i-1]*Math.sin(i*Math.PI/180);
+			// 	// this.drawPlane((data[i]+data[i-1])*Math.PI/360, i, x, y)
+			// 	this.add_sphere(data[i-1]*Math.cos(i*Math.PI/180), data[i-1]*Math.sin(i*Math.PI/180), this.sphere.clone());
+			// }
+      this.add_curve(data);
 		},
-    addThickness:function (){
-      this.thickness+=0.05;
-      this.thickness = 1*this.thickness.toFixed(2);
-    },
     drawLine:function (x, y, z, Color){
 			let material = new THREE.LineBasicMaterial({color: Color});
 			let points = [];
@@ -120,7 +141,15 @@ export default {
       this.renderer.setSize(width, height);
       this.camera.aspect = width / height;
       this.camera.updateProjectionMatrix();
-    }
+    },
+    drawPlane:function(r, i, x, z){
+			const geometry = new THREE.PlaneGeometry( r, 200 );
+			const material = new THREE.MeshBasicMaterial( {color: 0x87ceeb, side: THREE.DoubleSide} );
+			const plane = new THREE.Mesh( geometry, material );
+			plane.rotation.y = i*Math.PI/180;
+			plane.position.set(x, 0, z)
+			this.scene.add( plane );
+		}
   }
 };
 </script>

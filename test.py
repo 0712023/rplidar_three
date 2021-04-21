@@ -31,4 +31,5 @@ try:
 except KeyboardInterrupt:
     print('Stoping.')
 lidar.stop()
+lidar.stop_motor()
 lidar.disconnect()
