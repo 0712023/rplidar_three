@@ -12,12 +12,12 @@ lidar = RPLidar(None, PORT_NAME)
 max_distance = 0
 
 # setup mqtt connection
-client = mqtt.Client("makerio_mqtt")
+client = mqtt.Client()
 client.connect("192.168.168.162", 1883)
 client.loop_start()
 
 def process_data(data):
-    client.publish("test", '['+','.join(str(e) for e in data)+']')
+    client.publish("rplidar_1", '['+','.join(str(e) for e in data)+']')
     pass
 
 scan_data = [0]*360
