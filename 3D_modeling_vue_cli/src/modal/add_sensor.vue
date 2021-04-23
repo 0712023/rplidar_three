@@ -1,7 +1,7 @@
 <template>
     <div id="modal">
-		device name
-        <input type="text" placeholder="device name" v-model='device_name'>
+		device name <br>
+        <input type="text" placeholder="device name" v-model='device_name'> <br>
         <button @click="add_sensor">add device</button>
     </div>
 </template>
@@ -13,7 +13,6 @@ export default {
     data() {
         return{
             device_name:null,
-            on_message:null
         }
     },
     methods:{

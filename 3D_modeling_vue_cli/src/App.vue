@@ -1,17 +1,17 @@
 <template>
   <div id="app">
     <nav class="main-nav">
-      <Burger/>
+      <Burger/><button v-if="!(this.$route.name==`Home`)" @click="route_home">Back to Home</button>
     </nav>
     <div class="body"><router-view></router-view></div>
     <Sidebar>
       <ul class="sidebar-panel-nav">
         <li>
-          <router-link to="/">Sensor List</router-link>
+          <router-link to="/">Robot List</router-link>
         </li>
       </ul>
       <ul class="sidebar-panel-nav">
-        <li >
+        <li>
           <router-link v-for="sensor in sensor_list" :key="sensor[0]" :to="'/render/'+sensor[0]">- {{sensor[0]}}</router-link>
         </li>
       </ul>
@@ -78,6 +78,9 @@ export default {
         }
       })
     },
+    route_home() {
+      this.$router.push('/')
+    }
   }
 };
 </script>

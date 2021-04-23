@@ -11,6 +11,7 @@ div#standard {
 }
 
 div#modal {
+    line-height: 200%;
     margin-top: 5vh;
     display: flex;
     flex-direction: column;
@@ -131,25 +132,6 @@ ul.sidebar-panel-nav>li>a:hover {
     transform: scale(1.1, 1.1);
 }
 
-.right-message-panel {
-    width: 60%;
-    height: 50%;
-    border: 2px solid rgb(148, 148, 148);
-    background-color: rgb(242, 245, 255);
-    position: fixed;
-    top: 25%;
-    right: -55%;
-    border-radius: 10px;
-    padding: 5px;
-    transition: 0.5s;
-    opacity: 30%;
-}
-
-.right-message-panel:hover {
-    right: -10%;
-    opacity: 100%;
-}
-
 button {
     align-items: center;
     border: 1px solid #257cdf86;
@@ -167,9 +149,10 @@ button:hover {
 }
 
 
-/* User Page */
+/* List Page */
 
 .box {
+    line-height: 200%;
     margin-left: 5vw;
     margin-top: 2vh;
     background-color: rgb(144, 27, 247);
