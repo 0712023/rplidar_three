@@ -13,11 +13,21 @@ max_distance = 0
 
 # setup mqtt connection
 client = mqtt.Client()
-client.connect("192.168.168.162", 1883)
+client.connect('192.168.168.162', 1883)
 client.loop_start()
 
+client.subscribe('rplidar1_sub', 2)
+
+info = lidar.info
+health = lidar.health
+
+def on_message(client, userdata, msg):
+    client.publish('device_info', '["rplidar_1","'+str(info['model'])+'","'+str(info['firmware'])+'","'+str(info['hardware'])+'","'+info['serialnumber']+'","'+health[0]+'"]')
+
+client.on_message = on_message
+
 def process_data(data):
-    client.publish("rplidar_1", '['+','.join(str(e) for e in data)+']')
+    client.publish('rplidar_1', '['+','.join(str(e) for e in data)+']')
     pass
 
 scan_data = [0]*360
