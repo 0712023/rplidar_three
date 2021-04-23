@@ -1,7 +1,12 @@
 <template>
     <div class="wrap" >
-        <div class="box" v-for="(sensor,index) in sensor_list" :key="index" @click="router_link(index)">
-            {{sensor}}
+        <div class="box" v-for="sensor in sensor_list" :key="sensor[0]" @click="router_link(sensor[0])">
+            sensor : {{sensor[0]}} <br>
+            model : {{sensor[1]}} <br>
+            firmware : {{sensor[2]}} <br>
+            hardware : {{sensor[3]}} <br>
+            serial number : {{sensor[4]}} <br>
+            health : {{sensor[5]}} <br>
         </div>
         <div class="box" @click="show_modal_addSensor">
             <span style="font-size:44px;">+</span>

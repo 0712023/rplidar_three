@@ -54,18 +54,24 @@ export default {
       const { host, port, endpoint, ...options } = this.connection;
       const connectUrl = `mqtt://${host}:${port}`;
       try {
-        this.$store.commit(Constant.SETCLIENT, mqtt.connect(connectUrl, options));
+        this.client = mqtt.connect(connectUrl, options);
       } catch (error) {
         console.log('mqtt.connect error', error);
         alert(error);
       }
       this.client.on('connect', () => {
         console.log('Connection succeeded!');
-        this.$store.commit(Constant.SUBSCRIBE, 'device_info');
+        this.client.subscribe('device_info', 2);
+        this.$store.commit(Constant.SETCLIENT, mqtt.connect(connectUrl, options));
       })
       this.client.on('error', error => {
         console.log('Connection failed', error);
         alert(error);
+      })
+      this.client.on('message', (topic, payload)=>{
+        if(`${topic}` === 'device_info'){
+          this.$store.commit(Constant.ADDSENSOR, JSON.parse(`${payload}`));
+        }
       })
     },
   }

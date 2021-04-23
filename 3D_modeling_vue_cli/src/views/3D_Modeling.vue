@@ -5,7 +5,7 @@
 <script type="module">
 import * as THREE from "../assets/three.module.js";
 import * as OrbitControls from "../assets/OrbitControls.module.js";
-import mqtt from '../assets/mqtt.min.js'
+import Constant from "../store/Constant"
 export default {
   data() {
     return {
@@ -61,41 +61,26 @@ export default {
     this.animate();
 
     //connect mqtt
-    this.create_connection();
+    this.subscribe_device('rplidar1');
   },
   destroyed() {
     //remove element when destroy to save memory
     document.body.removeChild(this.renderer.domElement);
   },
   methods:{
-    create_connection() {
-      const { host, port, endpoint, ...options } = this.connection;
-      const connectUrl = `mqtt://${host}:${port}`;
-      try {
-        this.client = mqtt.connect(connectUrl, options);
-      } catch (error) {
-        console.log('mqtt.connect error', error);
-        alert(error);
-      }
-      this.client.on('connect', () => {
-        console.log('Connection succeeded!');
-        //subscribe topic when connection succeeded
-        this.do_subscribe();
+    subscribe_device(device) {
+      let client = this.$store.state.client
+      client.subscribe(device, 2);
+      client.on('message', (topic, message) => {
+        console.log(message);
+        if(`${topic}` === device){
+          let data = JSON.parse(`${message}`);
+          //remove old data and draw new data
+          this.scene = this.init_scene.clone();
+          this.add_curve(data);
+        }
       })
-      this.client.on('error', error => {
-        console.log('Connection failed', error);
-        alert(error);
-      })
-      this.client.on('message', (topic, message) => {
-        let data = JSON.parse(`${message}`);
-        //remove old data and draw new data
-        this.scene = this.init_scene.clone();
-        this.add_curve(data);
-      })
-    },
-    do_subscribe() {
-        const { topic, qos } = this.subscription;
-        this.client.subscribe(topic, { qos });
+      this.$store.commit(Constant.SETCLIENT, client);
     },
     draw_line(x, y, z, color) {
 			let material = new THREE.LineBasicMaterial({color: color});

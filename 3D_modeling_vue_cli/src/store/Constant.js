@@ -6,5 +6,6 @@ export default {
     REMOVESENSOR : "removeSensor",
     SETCLIENT : "setClient",
     SUBSCRIBE : "subscribe",
-    UNSUBSCRIBE : "unsubscribe"
+    UNSUBSCRIBE : "unsubscribe",
+    PUBLISH : "publish"
 }

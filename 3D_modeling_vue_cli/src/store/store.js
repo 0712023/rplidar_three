@@ -7,7 +7,7 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     isNavOpen : false,
-    sensor_list : ["test1", "test2", "test3", "test4"],
+    sensor_list : [],
     client : null
   },
   mutations: {
@@ -21,7 +21,12 @@ export default new Vuex.Store({
       return oldState.isNavOpen;
     },
     [Constant.ADDSENSOR]: (oldState, payload) =>{
-      oldState.sensor_list.push(payload);
+      if(JSON.stringify(oldState.sensor_list).includes(payload[0])){
+        alert('device already exist!');
+      } else{
+        oldState.sensor_list.push(payload);
+        alert('device added successfully!');
+      }
     },
     [Constant.REMOVESENSOR]: (oldState, payload) =>{
       oldState.sensor_list = oldState.sensor_list.splice(oldState.sensor_list.indexOf(payload), 1);
@@ -38,6 +43,10 @@ export default new Vuex.Store({
       let client = oldState.client;
       client.unsubscribe(payload);
       oldState.client = client;
+    },
+    [Constant.PUBLISH]: (oldState, payload) =>{
+      let client = oldState.client;
+      client.publish(payload['topic'], payload['payload']);
     },
   }
 })
