@@ -6,6 +6,7 @@
 import * as THREE from "../assets/three.module.js";
 import * as OrbitControls from "../assets/OrbitControls.module.js";
 import Constant from "../store/Constant"
+import EventBus from "../store/Eventbus"
 export default {
   data() {
     return {
@@ -60,28 +61,13 @@ export default {
     //initiate loop
     this.animate();
 
-    //connect mqtt
-    this.subscribe_device('rplidar1');
+    EventBus.$on('data', (data)=>this.add_curve(data))
   },
   destroyed() {
     //remove element when destroy to save memory
     document.body.removeChild(this.renderer.domElement);
   },
   methods:{
-    subscribe_device(device) {
-      let client = this.$store.state.client
-      client.subscribe(device, 2);
-      client.on('message', (topic, message) => {
-        console.log(message);
-        if(`${topic}` === device){
-          let data = JSON.parse(`${message}`);
-          //remove old data and draw new data
-          this.scene = this.init_scene.clone();
-          this.add_curve(data);
-        }
-      })
-      this.$store.commit(Constant.SETCLIENT, client);
-    },
     draw_line(x, y, z, color) {
 			let material = new THREE.LineBasicMaterial({color: color});
 			let points = [];
@@ -92,6 +78,7 @@ export default {
 			this.scene.add(axis);
     },
     add_curve(data) {
+      this.scene = this.init_scene.clone();
       let coordinate_data = [];
       //convert distance data of 360 degrees to coordinate data which is (x, y);
       for(let i = 1; i <= data.length ; i++){

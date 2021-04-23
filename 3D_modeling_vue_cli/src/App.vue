@@ -12,7 +12,7 @@
       </ul>
       <ul class="sidebar-panel-nav">
         <li >
-          <router-link v-for="(sensor, index) in sensor_list" :key="index" :to="'/render/'+index">- {{sensor}}</router-link>
+          <router-link v-for="sensor in sensor_list" :key="sensor[0]" :to="'/render/'+sensor[0]">- {{sensor[0]}}</router-link>
         </li>
       </ul>
     </Sidebar>
@@ -24,6 +24,7 @@ import Burger from "./components/Menu/Burger.vue";
 import Sidebar from "./components/Menu/Sidebar.vue";
 import mqtt from './assets/mqtt.min.js'
 import Constant from './store/Constant'
+import EventBus from './store/Eventbus'
 
 export default {
   name: "app",
@@ -70,7 +71,10 @@ export default {
       })
       this.client.on('message', (topic, payload)=>{
         if(`${topic}` === 'device_info'){
+          this.client.subscribe(JSON.parse(`${payload}`)[0]);
           this.$store.commit(Constant.ADDSENSOR, JSON.parse(`${payload}`));
+        } else {
+          EventBus.$emit('data', JSON.parse(`${payload}`));
         }
       })
     },
