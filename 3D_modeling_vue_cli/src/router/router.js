@@ -1,15 +1,18 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Render from '../views/3D_Modeling.vue'
-
 Vue.use(VueRouter)
 
 const routes = [
   {
     path: '/',
+    name: 'Home',
+    component: ()=> import ('../views/Home.vue')
+  },
+  {
+    path: '/render/:serial',
     name: '3D_Modeling',
-    component: Render
-  }
+    component: ()=> import ('../views/3D_Modeling.vue')
+  },
 ]
 
 const router = new VueRouter({

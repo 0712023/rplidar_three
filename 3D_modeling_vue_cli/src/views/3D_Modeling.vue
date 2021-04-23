@@ -7,7 +7,7 @@ import * as THREE from "../assets/three.module.js";
 import * as OrbitControls from "../assets/OrbitControls.module.js";
 import mqtt from '../assets/mqtt.min.js'
 export default {
-  data:function(){
+  data() {
     return {
       connection: {
         host: 'localhost',

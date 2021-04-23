@@ -27,6 +27,7 @@ RpLidar, three.js, MQTT
 
 ### Software
 
+- Vue Cli
 - Three.js
 - Node-RED
 - MQTT
