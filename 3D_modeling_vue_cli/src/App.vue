@@ -44,6 +44,7 @@ export default {
         reconnectPeriod: 4000, // Reconnection interval
       },
       client: {connected: false},
+      serial: null
     }
   },
   created() {
@@ -71,10 +72,11 @@ export default {
       })
       this.client.on('message', (topic, payload)=>{
         if(`${topic}` === 'device_info'){
+          this.serial = JSON.parse(`${payload}`)[0]
           this.client.subscribe(JSON.parse(`${payload}`)[0]);
           this.$store.commit(Constant.ADDSENSOR, JSON.parse(`${payload}`));
         } else {
-          EventBus.$emit('data', JSON.parse(`${payload}`));
+          EventBus.$emit(this.serial, JSON.parse(`${payload}`));
         }
       })
     },

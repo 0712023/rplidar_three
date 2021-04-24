@@ -5,24 +5,10 @@
 <script type="module">
 import * as THREE from "../assets/three.module.js";
 import * as OrbitControls from "../assets/OrbitControls.module.js";
-import Constant from "../store/Constant"
 import EventBus from "../store/Eventbus"
 export default {
   data() {
     return {
-      connection: {
-        host: 'localhost',
-        port: 8889,
-        endpoint: '/mqtt',
-        clean: true, // Reserved session
-        connectTimeout: 4000, // Time out
-        reconnectPeriod: 4000, // Reconnection interval
-      },
-      subscription: {
-        topic: 'rplidar_1',
-        qos: 0,
-      },
-      client: {connected: false},
       scene:null,
       camera:null,
       renderer:null,
@@ -61,7 +47,8 @@ export default {
     //initiate loop
     this.animate();
 
-    EventBus.$on('data', (data)=>this.add_curve(data))
+    //draw curve when data arrive
+    EventBus.$on(this.$route.params.serial, (data)=>this.add_curve(data))
   },
   destroyed() {
     //remove element when destroy to save memory
