@@ -7,5 +7,6 @@ export default {
     SETCLIENT : "setClient",
     SUBSCRIBE : "subscribe",
     UNSUBSCRIBE : "unsubscribe",
-    PUBLISH : "publish"
+    PUBLISH : "publish",
+    SETCAMERAPOSITION : "setCameraPosition"
 }

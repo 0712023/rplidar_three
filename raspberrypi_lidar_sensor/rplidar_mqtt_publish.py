@@ -1,6 +1,6 @@
 import os
-import paho.mqtt.client as mqtt # Import the MQTT library
-import time # The time library is useful for delays
+import paho.mqtt.client as mqtt
+import time
 from math import cos, sin, pi, floor
 from adafruit_rplidar import RPLidar
 

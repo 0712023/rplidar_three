@@ -7,8 +7,9 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     isNavOpen : false,
-    sensor_list : [],
-    client : null
+    sensor_list : [["rplidar_test","00","(0, 0)","0","beautifuldayisntit","Good"]],
+    client : null,
+    camera_position : {x:250, y:250, z:250}
   },
   mutations: {
     [Constant.SETISNAVOPEN]: (oldState, payload) =>{ //nav bar 상태 설정
@@ -47,6 +48,9 @@ export default new Vuex.Store({
     [Constant.PUBLISH]: (oldState, payload) =>{
       let client = oldState.client;
       client.publish(payload['topic'], payload['payload']);
+    },
+    [Constant.SETCAMERAPOSITION]: (oldState, payload) =>{
+      oldState.camera_position = payload;
     },
   }
 })

@@ -1,11 +1,11 @@
 <template>
-  <div></div>
 </template>
 
 <script type="module">
 import * as THREE from "../assets/three.module.js";
 import * as OrbitControls from "../assets/OrbitControls.module.js";
 import EventBus from "../store/Eventbus"
+import Constant from "../store/Constant"
 export default {
   data() {
     return {
@@ -25,22 +25,22 @@ export default {
 
     //initialize camera
     this.camera = new THREE.PerspectiveCamera(45,window.innerWidth / window.innerHeight, 1, 1000);
-    this.camera.position.x = 250;
-    this.camera.position.y = 250;
-    this.camera.position.z = 250;
+    this.camera.position.x = this.$store.state.camera_position.x;
+    this.camera.position.y = this.$store.state.camera_position.y;
+    this.camera.position.z = this.$store.state.camera_position.z;
 
     //resize event callback
     window.addEventListener("resize", this.resize);
-
+    window.addEventListener("click", ()=>{this.set_camera_position(this.camera.position)})
     //camera control
     new OrbitControls.OrbitControls(this.camera, this.renderer.domElement);
 
     //X, Y, Z Axis
-		this.draw_line(1000, 0, 0, 0xff0000);
-		this.draw_line(0, 1000, 0, 0x00ff00);
-		this.draw_line(0, 0, 1000, 0x0000ff);
+		this.draw_axis(1000, 0, 0, 0xff0000);
+		this.draw_axis(0, 1000, 0, 0x00ff00);
+		this.draw_axis(0, 0, 1000, 0x0000ff);
 		this.init_scene = this.scene.clone();
-    
+
     //render over screen
     document.body.appendChild(this.renderer.domElement);
 
@@ -55,7 +55,21 @@ export default {
     document.body.removeChild(this.renderer.domElement);
   },
   methods:{
-    draw_line(x, y, z, color) {
+    set_camera_position(camera_position){
+      this.$store.commit(Constant.SETCAMERAPOSITION, camera_position)
+    },
+    resize() {
+      var width = window.innerWidth;
+      var height = window.innerHeight;
+      this.renderer.setSize(width, height);
+      this.camera.aspect = width / height;
+      this.camera.updateProjectionMatrix();
+    },
+    animate() {
+      requestAnimationFrame(this.animate);
+      this.renderer.render(this.scene, this.camera);
+    },
+    draw_axis(x, y, z, color) {
 			let material = new THREE.LineBasicMaterial({color: color});
 			let points = [];
 			points.push(new THREE.Vector3(x, y, z));
@@ -79,17 +93,6 @@ export default {
       let splineObject = new THREE.Line( geometry, material );
       splineObject.rotation.x = Math.PI/2;
       this.scene.add(splineObject);
-    },
-    animate() {
-      requestAnimationFrame(this.animate);
-      this.renderer.render(this.scene, this.camera);
-    },
-    resize() {
-      var width = window.innerWidth;
-      var height = window.innerHeight;
-      this.renderer.setSize(width, height);
-      this.camera.aspect = width / height;
-      this.camera.updateProjectionMatrix();
     },
   }
 };
