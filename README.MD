@@ -83,7 +83,7 @@ def process_data(data):
 
 THREE.js는 WebGL renderer를 이용한 3D cross-browser javascript library입니다. THREE.js를 이용하여 도형, 선, 면 등 다양한 기하를 3D 공간에 그릴 수 있습니다. 이번 프로젝트에서 이 THREE.js를 활용하여 RPLDIAR 센서로부터 전달받은 데이터를 3D 공간에 그리는 것이 목표였습니다. 더 나아가, 단순히 html body에 그리는 것이 아닌 오픈소스 MVVM front-end javascript frameworkd인 Vue를 활용하여 더 웹사이트 환경을 구성하려고 노력했습니다. 구체적으로 Vue Cli를 활용하여 사용자가 직접 센서를 선택하고, 특정 mqtt topic을 구독하며, 다양한 센서들을 관리할 수 있는 페이지를 제작했습니다.
 
-3D modeling이 이루어지는 *3D_Modeling.vue*에서 주요하게 사용되는 method는 대표적으로 *add_curve(data)*가 있습니다.
+3D modeling이 이루어지는 *3D_Modeling.vue*에서 주요하게 사용되는 method는 대표적으로 *add_curve(data)* 가 있습니다.
 ```js
 add_curve(data) {
     this.scene = this.init_scene.clone();
